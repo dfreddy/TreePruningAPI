@@ -4,6 +4,7 @@ import json
 
 app = Flask(__name__)
 
+# requests tree from server
 def getTree(name):
     server_url = 'https://kf6xwyykee.execute-api.us-east-1.amazonaws.com/production/tree/' + name
     response = requests.get(server_url)
@@ -76,11 +77,13 @@ def pruner(name):
 
     tree = getTree(name)
 
-    pruned_tree = pruneTree(tree, indicator_ids)
+    if indicator_ids != []:
+        pruned_tree = pruneTree(tree, indicator_ids)
+        return jsonify(pruned_tree)
 
-    return jsonify(pruned_tree)
+    return jsonify(tree)
 
-'''
+''' testing for endpoint args
 @app.route('/tree/<string:name>', methods=['GET'])
 def testUrlArgs(name):
     indicator_ids = request.args.getlist('indicator_ids[]')
