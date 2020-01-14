@@ -1,6 +1,6 @@
+import json
 from flask import Flask, jsonify, request, abort
 import requests
-import json
 
 app = Flask(__name__)
 
@@ -21,7 +21,7 @@ def getTree(name):
     data = response.json()
 
     # testing json response
-    output_file = open("output.txt","w+")
+    output_file = open("output.txt", "w+")
     json.dump(data, output_file, indent=4)
     output_file.close()
 
@@ -62,7 +62,7 @@ def pruneTree(tree, indicator_ids):
     tree = themes_list
 
     # testing pruned output
-    output_file = open("pruned_output.txt","w+")
+    output_file = open("pruned_output.txt", "w+")
     json.dump(tree, output_file, indent=4)
     output_file.close()
 
