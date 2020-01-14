@@ -36,13 +36,10 @@ def pruneTree(tree, indicator_ids):
 
     for a in tree:
         sub_themes_list = []
-
         for b in a['sub_themes']:
             categories_list = []
-
             for c in b['categories']:
                 indicators_list = []
-
                 for d in c['indicators']:
                     if str(d['id']) in indicator_ids:
                         indicators_list.append(d)
@@ -83,16 +80,20 @@ def pruner(name):
 
     return jsonify(tree)
 
-''' testing for endpoint args
+'''
+# testing for endpoint args
 @app.route('/tree/<string:name>', methods=['GET'])
 def testUrlArgs(name):
     indicator_ids = request.args.getlist('indicator_ids[]')
     return jsonify({'Tree name': name, 'Indicators': '{}'.format(indicator_ids)})
 '''
 
+'''
+# testing for localhost
 @app.route('/', methods=['GET'])
 def test():
     return jsonify({'msg': 'localhost works'})
+'''
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
