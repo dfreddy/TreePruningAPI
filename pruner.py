@@ -18,19 +18,19 @@ def getTree(name):
         count += 1
         if count >= 4:
             abort(500)
-        print("5000. new request")
+        # print("5000. new request")
         response = requests.get(server_url)
 
     data = response.json()
 
-    '''
+    """
     # testing json response
     if not os.path.isdir('output'):
         os.mkdir('output')
     output_file = open('output/output.txt', 'w+')
     json.dump(data, output_file, indent=4)
     output_file.close()
-    '''
+    """
 
     return data
 
@@ -40,46 +40,42 @@ def getTree(name):
 # cleans out categories that have no indicators
 # same for sub_themes and themes
 # TODO: recursively iterate over is_dict() condition
+
+
+def aux_pruner(tree, ids, st_list, cat_list, ind_list):
+    new_tree = []
+
+    for item in tree:
+        if "sub_themes" in item:
+            aux_pruner(item["sub_themes"], ids, st_list, [], [])
+            item["sub_themes"] = st_list
+            if item["sub_themes"] != []:
+                new_tree.append(item)
+            st_list = []
+
+        elif "categories" in item:
+            aux_pruner(item["categories"], ids, st_list, cat_list, [])
+            item["categories"] = cat_list
+            if item["categories"] != []:
+                st_list.append(item)
+            cat_list = []
+
+        elif "indicators" in item:
+            aux_pruner(item["indicators"], ids, st_list, cat_list, ind_list)
+            item["indicators"] = ind_list
+            if item["indicators"] != []:
+                cat_list.append(item)
+            ind_list = []
+
+        elif str(item["id"]) in ids:
+            ind_list.append(item)
+
+    return new_tree
+
+
 def pruneTree(tree, indicator_ids):
-    themes_list = []
+    return aux_pruner(tree, indicator_ids, [], [], [])
 
-    for a in tree:
-        sub_themes_list = []
-        for b in a["sub_themes"]:
-            categories_list = []
-            for c in b["categories"]:
-                indicators_list = []
-                for d in c["indicators"]:
-                    if str(d["id"]) in indicator_ids:
-                        indicators_list.append(d)
-
-                # if category c has no indicators, removes it
-                c["indicators"] = indicators_list
-                if c["indicators"] != []:
-                    categories_list.append(c)
-
-            # if sub theme b has no categories, removes it
-            b["categories"] = categories_list
-            if b["categories"] != []:
-                sub_themes_list.append(b)
-
-        # if theme a has no sub themes, removes it
-        a["sub_themes"] = sub_themes_list
-        if a["sub_themes"] != []:
-            themes_list.append(a)
-
-    tree = themes_list
-
-    '''
-    # testing pruned output
-    if not os.path.isdir('output'):
-        os.mkdir('output')
-    output_file = open('output/pruned_output.txt', 'w+')
-    json.dump(tree, output_file, indent=4)
-    output_file.close()
-    '''
-
-    return tree
 
 def configure_routes(app):
     @app.route("/tree/<string:name>", methods=["GET"])
