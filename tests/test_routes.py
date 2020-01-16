@@ -18,4 +18,12 @@ def test_get_tree():
     client = app.test_client()
     response = client.get('/tree/input')
 
-    # assert response.status_code == 200
+    assert response.status_code in [200, 500]
+
+def test_failed_get_tree():
+    app = Flask(__name__)
+    configure_routes(app)
+    client = app.test_client()
+    response = client.get('/tree/i')
+
+    assert response.status_code in [404, 500]
