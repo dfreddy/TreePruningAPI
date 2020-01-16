@@ -1,6 +1,14 @@
 # TreePruningAPI
 
-On root folder, start server with
+## Installing dependencies
+
+On root folder,
+
+    $ source build.sh
+
+## Running server
+
+On root folder,
 
     $ source run.sh
 

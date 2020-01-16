@@ -1,6 +1,7 @@
 import json
 from flask import Flask, jsonify, request, abort
 import requests
+import os
 
 # requests tree from server
 def getTree(name):
@@ -15,17 +16,21 @@ def getTree(name):
             abort(404)
 
         count += 1
-        if count >= 10:
+        if count >= 4:
             abort(500)
+        print("5000. new request")
+        response = requests.get(server_url)
 
     data = response.json()
 
-    """
+    '''
     # testing json response
-    output_file = open("./output/output.txt", "w+")
+    if not os.path.isdir('output'):
+        os.mkdir('output')
+    output_file = open('output/output.txt', 'w+')
     json.dump(data, output_file, indent=4)
     output_file.close()
-    """
+    '''
 
     return data
 
@@ -65,15 +70,16 @@ def pruneTree(tree, indicator_ids):
 
     tree = themes_list
 
-    """
+    '''
     # testing pruned output
-    output_file = open("./output/pruned_output.txt", "w+")
+    if not os.path.isdir('output'):
+        os.mkdir('output')
+    output_file = open('output/pruned_output.txt', 'w+')
     json.dump(tree, output_file, indent=4)
     output_file.close()
-    """
+    '''
 
     return tree
-
 
 def configure_routes(app):
     @app.route("/tree/<string:name>", methods=["GET"])
