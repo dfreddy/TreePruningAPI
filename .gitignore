@@ -1,7 +1,6 @@
-/venv
 /__pycache__
-/output/output.txt
-/output/pruned_output.txt
+/.pytest_cache
+/output
 /tests/__pycache__
 /tests/.pytest_cache
 /tests/__init__.pyc

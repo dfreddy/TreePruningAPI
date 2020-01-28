@@ -1,34 +1,46 @@
 from flask import Flask
 import json
 from TreePruningAPI.pruner import configure_routes, pruneTree, aux_pruner
+import pytest
 
-# API TESTING #
-def test_localhost():
+
+@pytest.fixture
+def client():
     app = Flask(__name__)
     configure_routes(app)
-    client = app.test_client()
+    return app.test_client()
+
+
+def setup_mocker(mocker):
+    get_mock = mocker.patch("requests.get")
+    response_mock = get_mock.return_value
+    response_mock.json.return_value = {}
+
+    return response_mock
+
+
+# API TESTING #
+def test_localhost(client):
     response = client.get("/")
 
     assert response.json == {"msg": "localhost works"}
     assert response.status_code == 200
 
 
-def test_get_tree():
-    app = Flask(__name__)
-    configure_routes(app)
-    client = app.test_client()
+def test_get_tree(client, mocker):
+    setup_mocker(mocker).status_code = 200
+
     response = client.get("/tree/input")
 
-    assert response.status_code in [200, 500]
+    assert response.status_code == 200
 
 
-def test_failed_get_tree():
-    app = Flask(__name__)
-    configure_routes(app)
-    client = app.test_client()
-    response = client.get("/tree/i")
+def test_failed_get_tree(client, mocker):
+    setup_mocker(mocker).status_code = 404
 
-    assert response.status_code in [404, 500]
+    response = client.get("/tree/input")
+
+    assert response.status_code == 404
 
 
 # UNIT TESTING #

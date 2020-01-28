@@ -18,7 +18,7 @@ def getTree(name):
         count += 1
         if count >= 4:
             abort(500)
-        # print("5000. new request")
+        # print("500, new request")
         response = requests.get(server_url)
 
     data = response.json()
@@ -39,7 +39,6 @@ def getTree(name):
 # removes indicators that werent selected
 # cleans out categories that have no indicators
 # same for sub_themes and themes
-# TODO: recursively iterate over is_dict() condition
 
 
 def aux_pruner(tree, ids, st_list, cat_list, ind_list):
