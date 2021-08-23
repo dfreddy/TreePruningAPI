@@ -1,5 +1,11 @@
 # TreePruningAPI (Linux)
 
+Simple API that connects to a server and prunes a tree according to the desired parameters.
+
+## Tech Stack
+
+Python, Flask
+
 ## Installing dependencies
 
 On root folder
